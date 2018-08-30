@@ -73,7 +73,7 @@ func main() {
 	repo := &ConsignmentRepository{}
 
 	srv := micro.NewService(
-		micro.Name("consignment"),
+		micro.Name("go.micro.srv.consignment"),
 		micro.Version("latest"),
 	)
 
