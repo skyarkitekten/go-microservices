@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	micro "github.com/micro/go-micro"
+	"github.com/micro/go-micro"
 	pb "github.com/skyarkitekten/go-microservices/consignment-service/proto/consignment"
 	vesselProto "github.com/skyarkitekten/go-microservices/vessel-service/proto/vessel"
 )
@@ -30,18 +30,18 @@ func main() {
 		log.Panicf("Could not connect to datastore with host %s - %v", host, err)
 	}
 
-	service := micro.NewService(
+	srv := micro.NewService(
 		micro.Name("go.micro.srv.consignment"),
 		micro.Version("latest"),
 	)
 
-	vesselClient := vesselProto.NewVesselServiceClient("go.micro.srv.vessel", service.Client())
+	vesselClient := vesselProto.NewVesselServiceClient("go.micro.srv.vessel", srv.Client())
 
-	service.Init()
+	srv.Init()
 
-	pb.RegisterShippingServiceHandler(service.Server(), &service{session, vesselClient})
+	pb.RegisterShippingServiceHandler(srv.Server(), &service{session, vesselClient})
 
-	if err := service.Run(); err != nil {
+	if err := srv.Run(); err != nil {
 		fmt.Println(err)
 	}
 }
