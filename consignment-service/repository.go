@@ -10,12 +10,14 @@ const (
 	cosignmentCollection = "consignments"
 )
 
+// Repository is the interface for the ConsignmentRepository
 type Repository interface {
 	Create(*pb.Consignment) error
 	GetAll() ([]*pb.Consignment, error)
 	Close()
 }
 
+// ConsignmentRepository is the repository for consignments
 type ConsignmentRepository struct {
 	session *mgo.Session
 }
