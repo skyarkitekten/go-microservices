@@ -1,50 +1,48 @@
 package main
 
 import (
-	"context"
-	"errors"
 	"fmt"
+	"log"
+	"os"
+
+	pb "github.com/skyarkitekten/go-microservices/vessel-service/proto/vessel"
 
 	"github.com/micro/go-micro"
-	pb "github.com/skyarkitekten/go-microservices/vessel-service/proto/vessel"
 )
 
-type Repository interface {
-	FindAvailable(*pb.Specification) (*pb.Vessel, error)
-}
+const (
+	defaultHost = "localhost:27017"
+)
 
-type VesselRepository struct {
-	vessels []*pb.Vessel
-}
+func createTestData(repo Repository) {
+	defer repo.Close()
 
-func (repo *VesselRepository) FindAvailable(spec *pb.Specification) (*pb.Vessel, error) {
-	for _, vessel := range repo.vessels {
-		if spec.Capacity <= vessel.Capacity && spec.MaxWeight <= vessel.MaxWeight {
-			return vessel, nil
-		}
-	}
-	return nil, errors.New("No vessel found with that spec")
-}
-
-type service struct {
-	repo Repository
-}
-
-func (s *service) FindAvailable(ctx context.Context, req *pb.Specification, res *pb.Response) error {
-	vessel, err := s.repo.FindAvailable(req)
-	if err != nil {
-		return err
-	}
-
-	res.Vessel = vessel
-	return nil
-}
-
-func main() {
 	vessels := []*pb.Vessel{
 		&pb.Vessel{Id: "vessel001", Name: "Boaty McBoatface", MaxWeight: 200000, Capacity: 500},
 	}
-	repo := &VesselRepository{vessels}
+
+	for _, v := range vessels {
+		repo.Create(v)
+	}
+}
+
+func main() {
+
+	host := os.Getenv("DB_HOST")
+	if host == "" {
+		host = defaultHost
+	}
+
+	session, err := CreateSession(host)
+	defer session.Close()
+
+	if err != nil {
+		log.Fatalf("Error connecting to the datastore: %v", err)
+	}
+
+	repo := &VesselRepository{session.Copy()}
+
+	createTestData(repo)
 
 	srv := micro.NewService(
 		micro.Name("go.micro.srv.vessel"),
@@ -53,8 +51,7 @@ func main() {
 
 	srv.Init()
 
-	// Register our implementation with
-	pb.RegisterVesselServiceHandler(srv.Server(), &service{repo})
+	pb.RegisterVesselServiceHandler(srv.Server(), &service{session})
 
 	if err := srv.Run(); err != nil {
 		fmt.Println(err)
