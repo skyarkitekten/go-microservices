@@ -40,10 +40,12 @@ func (repo *VesselRepository) FindAvailable(spec *pb.Specification) (*pb.Vessel,
 	return vessel, nil
 }
 
+// Create inserts a new vessel into the repository
 func (repo *VesselRepository) Create(vessel *pb.Vessel) error {
 	return repo.collection().Insert(vessel)
 }
 
+// Close closes the session to the datastore
 func (repo *VesselRepository) Close() {
 	repo.session.Close()
 }
