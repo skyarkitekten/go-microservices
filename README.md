@@ -20,3 +20,8 @@ Install the following:
 
 1. gRPC
 1. protobuf (move to usr/bin)
+
+## Docker Commands
+
+1. List docker images in table: `docker images --format "table {{.ID}}\t{{.Repository}}\t{{.Tag}}"`
+1. Purge images: `docker images -f dangling=true`
