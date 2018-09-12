@@ -3,6 +3,7 @@ package main
 import (
 	pb "github.com/skyarkitekten/go-microservices/user-service/proto/user"
 
+	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
 )
 
@@ -30,22 +31,45 @@ func (s *service) GetAll(ctx context.Context, req *pb.Request, res *pb.Response)
 }
 
 func (s *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
-	_, err := s.repo.GetByEmailAndPassword(req)
+	user, err := s.repo.GetByEmail(req.Email)
 	if err != nil {
 		return err
 	}
 
-	res.Token = "testing"
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		return err
+	}
+
+	token, err := s.tokenService.Encode(user)
+	if err != nil {
+		return err
+	}
+
+	res.Token = token
 	return nil
 }
 
 func (s *service) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
-	err := s.repo.Create(req)
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	req.Password = string(hashedPassword)
+	err = s.repo.Create(req)
+	if err != nil {
+		return err
+	}
+
+	token, err := s.tokenService.Encode(req)
 	if err != nil {
 		return err
 	}
 
 	res.User = req
+	res.Token = &pb.Token{Token: token}
+
 	return nil
 }
 

@@ -9,7 +9,7 @@ import (
 type Repository interface {
 	Get(id string) (*pb.User, error)
 	GetAll() ([]*pb.User, error)
-	GetByEmailAndPassword(*pb.User) (*pb.User, error)
+	GetByEmail(email string) (*pb.User, error)
 	Create(*pb.User) error
 }
 
@@ -37,9 +37,13 @@ func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 	return users, nil
 }
 
-// GetByEmailAndPassword returns a User from the repository by email and password
-func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, error) {
-	if err := repo.db.First(&user).Error; err != nil {
+// GetByEmail returns a User from the repository by email and password
+func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
+
+	user := &pb.User{}
+
+	if err := repo.db.Where("email = ?", email).
+		First(&user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
