@@ -1,7 +1,7 @@
 build:
 	protoc -I. --go_out=plugins=micro:$(GOPATH)/src/github.com/skyarkitekten/go-microservices/user-service \
-    proto/user/user.proto
-	docker build -t user-service .
+    proto/auth/auth.proto
+	#docker build -t user-service .
 
 run:
 	docker run --net="host" \
