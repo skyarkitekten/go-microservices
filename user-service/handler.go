@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/micro/go-micro/broker"
-	pb "github.com/skyarkitekten/go-microservices/user-service/proto/user"
+	pb "github.com/skyarkitekten/go-microservices/user-service/proto/auth"
 
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"

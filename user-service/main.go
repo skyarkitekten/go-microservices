@@ -6,7 +6,7 @@ import (
 
 	"github.com/micro/go-micro"
 	_ "github.com/micro/go-plugins/registry/mdns"
-	pb "github.com/skyarkitekten/go-microservices/user-service/proto/user"
+	pb "github.com/skyarkitekten/go-microservices/user-service/proto/auth"
 )
 
 func main() {
@@ -32,7 +32,7 @@ func main() {
 
 	pubsub := srv.Server().Options().Broker
 
-	pb.RegisterUserServiceHandler(srv.Server(), &service{repo, tokenService, pubsub})
+	pb.RegisterAuthHandler(srv.Server(), &service{repo, tokenService, pubsub})
 
 	if err := srv.Run(); err != nil {
 		fmt.Println(err)
