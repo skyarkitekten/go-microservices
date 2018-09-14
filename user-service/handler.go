@@ -1,10 +1,10 @@
 package main
 
 import (
-	"encoding/json"
+	"errors"
+	"fmt"
 	"log"
 
-	"github.com/micro/go-micro/broker"
 	pb "github.com/skyarkitekten/go-microservices/user-service/proto/auth"
 
 	"golang.org/x/crypto/bcrypt"
@@ -16,7 +16,6 @@ const topic = "user.created"
 type service struct {
 	repo         Repository
 	tokenService Authable
-	pubSub       broker.Broker
 }
 
 func (s *service) Get(ctx context.Context, req *pb.User, res *pb.Response) error {
@@ -38,6 +37,7 @@ func (s *service) GetAll(ctx context.Context, req *pb.Request, res *pb.Response)
 }
 
 func (s *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
+	log.Println("Logging in with:", req.Email, req.Password)
 	user, err := s.repo.GetByEmail(req.Email)
 	if err != nil {
 		return err
@@ -58,45 +58,41 @@ func (s *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
 
 func (s *service) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
 
+	log.Println("Creating user: ", req)
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return err
+		return errors.New(fmt.Sprintf("error hashing password: %v", err))
 	}
 
 	req.Password = string(hashedPassword)
 	err = s.repo.Create(req)
 	if err != nil {
-		return err
+		return errors.New(fmt.Sprintf("error creating user: %v", err))
+	}
+
+	token, err := s.tokenService.Encode(req)
+	if err != nil {
+		return errors.New(fmt.Sprintf("error creating token for user: %v", err))
 	}
 
 	res.User = req
-	if err := s.publishEvent(req); err != nil {
-		return err
-	}
+	res.Token = &pb.Token{Token: token}
 
 	return nil
 }
 
 func (s *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.Token) error {
-	return nil
-}
 
-func (s *service) publishEvent(user *pb.User) error {
-	body, err := json.Marshal(user)
+	claims, err := s.tokenService.Decode(req.Token)
 	if err != nil {
 		return err
 	}
 
-	msg := &broker.Message{
-		Header: map[string]string{
-			"id": user.Id,
-		},
-		Body: body,
+	if claims.User.Id == "" {
+		return errors.New("invalid user")
 	}
 
-	if err := s.pubSub.Publish(topic, msg); err != nil {
-		log.Printf("[pub] failed: %v", err)
-	}
-
+	res.Valid = true
 	return nil
 }

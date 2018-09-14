@@ -30,9 +30,7 @@ func main() {
 
 	srv.Init()
 
-	pubsub := srv.Server().Options().Broker
-
-	pb.RegisterAuthHandler(srv.Server(), &service{repo, tokenService, pubsub})
+	pb.RegisterAuthHandler(srv.Server(), &service{repo, tokenService})
 
 	if err := srv.Run(); err != nil {
 		fmt.Println(err)
