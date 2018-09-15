@@ -7,14 +7,14 @@ import (
 	micro "github.com/micro/go-micro"
 	"github.com/micro/go-micro/broker"
 	_ "github.com/micro/go-plugins/broker/nats"
-	pb "github.com/skyarkitekten/go-microservices/user-service/proto/user"
+	pb "github.com/skyarkitekten/go-microservices/user-service/proto/auth"
 )
 
 const topic = "user.created"
 
 func main() {
 	srv := micro.NewService(
-		micro.Name("go.micro.srv.email"),
+		micro.Name("shippy.email"),
 		micro.Version("latest"),
 	)
 

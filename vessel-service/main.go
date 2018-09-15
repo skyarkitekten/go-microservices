@@ -45,7 +45,7 @@ func main() {
 	createTestData(repo)
 
 	srv := micro.NewService(
-		micro.Name("go.micro.srv.vessel"),
+		micro.Name("shippy.vessel"),
 		micro.Version("latest"),
 	)
 

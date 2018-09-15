@@ -241,10 +241,10 @@ func (m *Response) GetConsignments() []*Consignment {
 }
 
 func init() {
-	proto.RegisterType((*GetRequest)(nil), "go.micro.srv.consignment.GetRequest")
-	proto.RegisterType((*Consignment)(nil), "go.micro.srv.consignment.Consignment")
-	proto.RegisterType((*Container)(nil), "go.micro.srv.consignment.Container")
-	proto.RegisterType((*Response)(nil), "go.micro.srv.consignment.Response")
+	proto.RegisterType((*GetRequest)(nil), "shippy.consignment.GetRequest")
+	proto.RegisterType((*Consignment)(nil), "shippy.consignment.Consignment")
+	proto.RegisterType((*Container)(nil), "shippy.consignment.Container")
+	proto.RegisterType((*Response)(nil), "shippy.consignment.Response")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -269,7 +269,7 @@ func NewShippingServiceClient(serviceName string, c client.Client) ShippingServi
 		c = client.NewClient()
 	}
 	if len(serviceName) == 0 {
-		serviceName = "go.micro.srv.consignment"
+		serviceName = "shippy.consignment"
 	}
 	return &shippingServiceClient{
 		c:           c,

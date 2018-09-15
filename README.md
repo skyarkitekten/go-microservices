@@ -21,6 +21,18 @@ Install the following:
 1. gRPC
 1. protobuf (move to usr/bin)
 
+## Running the services
+
+### Everything
+
+`docker-compose up -s`
+
+### User Service
+
+1. `docker run -d -p 5432:5432 postgres`
+1. `make build`
+1. `make run`
+
 ## Docker Commands
 
 1. List docker images in table: `docker images --format "table {{.ID}}\t{{.Repository}}\t{{.Tag}}"`

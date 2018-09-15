@@ -6,20 +6,20 @@ import (
 
 	"github.com/micro/go-micro"
 	microClient "github.com/micro/go-micro/client"
-	pb "github.com/skyarkitekten/go-microservices/user-service/proto/user"
+	pb "github.com/skyarkitekten/go-microservices/user-service/proto/auth"
 	"golang.org/x/net/context"
 )
 
 func main() {
 
 	srv := micro.NewService(
-		micro.Name("go.micro.srv.user-cli"),
+		micro.Name("shippy.user-cli"),
 		micro.Version("latest"),
 	)
 
 	srv.Init()
 
-	client := pb.NewUserServiceClient("go.micro.srv.user", microClient.DefaultClient)
+	client := pb.NewAuthClient("shippy.user", microClient.DefaultClient)
 
 	name := "User McUserface"
 	email := "user@mcuserface.com"

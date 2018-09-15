@@ -203,9 +203,9 @@ func (m *Response) GetCreate() bool {
 }
 
 func init() {
-	proto.RegisterType((*Vessel)(nil), "go.micro.srv.vessel.Vessel")
-	proto.RegisterType((*Specification)(nil), "go.micro.srv.vessel.Specification")
-	proto.RegisterType((*Response)(nil), "go.micro.srv.vessel.Response")
+	proto.RegisterType((*Vessel)(nil), "shippy.vessel.Vessel")
+	proto.RegisterType((*Specification)(nil), "shippy.vessel.Specification")
+	proto.RegisterType((*Response)(nil), "shippy.vessel.Response")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -229,7 +229,7 @@ func NewVesselServiceClient(serviceName string, c client.Client) VesselServiceCl
 		c = client.NewClient()
 	}
 	if len(serviceName) == 0 {
-		serviceName = "go.micro.srv.vessel"
+		serviceName = "shippy.vessel"
 	}
 	return &vesselServiceClient{
 		c:           c,
