@@ -1,6 +1,6 @@
 build: 
-	protoc -I. --go_out=plugins=micro:$(GOPATH)/src/github.com/skyarkitekten/go-microservices/consignment-service \
-		proto/consignment/consignment.proto
+	protoc -I. --go_out=plugins=micro:. \
+	proto/consignment/consignment.proto
 	docker build -t consignment-service .
 
 run:
