@@ -24,7 +24,7 @@ func main() {
 	tokenService := &TokenService{repo}
 
 	srv := micro.NewService(
-		micro.Name("user.service"),
+		micro.Name("shippy.auth"),
 	)
 
 	srv.Init()

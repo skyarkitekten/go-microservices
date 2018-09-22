@@ -5,8 +5,7 @@ WORKDIR /go/src/github.com/skyarkitekten/go-microservices/vessel-service
 
 COPY . .
 
-RUN go get -u github.com/golang/dep/cmd/dep
-RUN dep init && dep ensure
+RUN go get
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
 
 
@@ -18,5 +17,5 @@ RUN mkdir /app
 WORKDIR /app
 COPY --from=builder /go/src/github.com/skyarkitekten/go-microservices/vessel-service/vessel-service .
 
-CMD ["./vessel-service"]
+ENTRYPOINT ["./vessel-service"]
 

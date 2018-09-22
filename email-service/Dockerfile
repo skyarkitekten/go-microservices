@@ -16,4 +16,4 @@ RUN mkdir /app
 WORKDIR /app
 COPY --from=builder /go/src/github.com/skyarkitekten/go-microservices/email-service/email-service .
 
-CMD ["./email-service"]
+ENTRYPOINT ["./email-service"]
