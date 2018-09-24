@@ -54,6 +54,7 @@ func main() {
 	}
 }
 
+//AuthWrapper returns the handler for user service
 func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, res interface{}) error {
 		meta, ok := metadata.FromContext(ctx)
