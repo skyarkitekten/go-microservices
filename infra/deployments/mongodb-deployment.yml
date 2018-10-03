@@ -4,9 +4,9 @@ metadata:
   name: mongo
 spec:
   serviceName: "mongo"
-  replicas: 1
+  replicas: 3
   selector:
-    matchLables:
+    matchLabels:
       app: mongo
   template:
     metadata:
@@ -35,14 +35,14 @@ spec:
           image: cvallance/mongo-k8s-sidecar
           env:
             - name: MONGO_SIDECAR_POD_LABELS
-              value: "role=mongo, environment=test"
+              value: "role=mongo,environment=test"
   volumeClaimTemplates:
   - metadata:
       name: mongo-persistent-storage
-      annotations: 
+      annotations:
         volume.beta.kubernetes.io/storage-class: "fast"
     spec:
-      accessModes: [ "ReadWriteOnce"]
-      resources: 
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
         requests:
           storage: 10Gi
