@@ -12,21 +12,30 @@ spec:
       labels:
         app: vessel
     spec:
-      containers:
-      - name: vessel-service
-        image: gcr.io/chad-thomas-neudesic/vessel-service:latest
-        imagePullPolicy: Always
-        command: [
-          "./vessel-service",
-          "--selector=static",
-          "--server_address=:8080",
-        ]
-        env:
+        containers:
+        - name: vessel-service
+          image: gcr.io/chad-thomas-neudesic/vessel-service:latest
+          imagePullPolicy: Always
+          command: [
+            "./vessel-service",
+            "--selector=static",
+            "--server_address=:8080",
+          ]
+          env:
           - name: DB_HOST
             value: "mongo:27017"
           - name: UPDATED_AT
-            value: "2018-10-03"
-        ports:
-        - containerPort: 8080
-          name: vessel-port
+            value: "Mon 03 OCT 2018 12:05:58 GMT"
+          resources:
+            limits: #START MOTHERFUCKING HERE!!!!
+              cpu: 500m
+              memory: 32Mi
+            requests:
+              cpu: 250m 
+              memory: 16Mi
+          ports:
+          - containerPort: 8080
+            name: vessel-port
 
+# https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/ 
+# https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#meaning-of-memory
