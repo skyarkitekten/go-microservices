@@ -9,3 +9,7 @@ run:
 		-e MICRO_SERVER_ADDRESS=:50053 \
 		-e MICRO_REGISTRY=mdns \
 		vessel-service
+
+push:
+	docker build -t gcr.io/chad-thomas-neudesic/vessel-service:latest .
+	docker push gcr.io/chad-thomas-neudesic/vessel-service:latest

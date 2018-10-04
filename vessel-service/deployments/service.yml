@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: vessel
+  labels:
+    app: vessel
+spec:
+  selector:
+    app: vessel
+  ports:
+  - port: 8080
+    protocol: TCP

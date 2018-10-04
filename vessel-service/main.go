@@ -7,7 +7,8 @@ import (
 
 	pb "github.com/skyarkitekten/go-microservices/vessel-service/proto/vessel"
 
-	"github.com/micro/go-micro"
+	micro "github.com/micro/go-micro"
+	k8s "github.com/micro/kubernetes/go/micro"
 )
 
 const (
@@ -44,7 +45,7 @@ func main() {
 
 	createTestData(repo)
 
-	srv := micro.NewService(
+	srv := k8s.NewService(
 		micro.Name("shippy.vessel"),
 		micro.Version("latest"),
 	)
